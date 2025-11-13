@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: kovr_backend_mssql
+    ports:
+      - "3000:3000"
+    environment:
+      # Variables para NestJS (SQL Server)
+      DB_TYPE: 'mssql'
+      DB_HOST: 'db_work'
+      DB_PORT: 1433
+      DB_USER: 'sa'
+      DB_PASS: 'MyStrongP@ssw0rd!'
+      DB_NAME: 'polizasdb'
+    depends_on:
+      - db_work
+
+  db_work:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: kovr_db_mssql
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: 'MyStrongP@ssw0rd!'
+      MSSQL_PID: 'Developer'
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+volumes:
+  mssql_data:
